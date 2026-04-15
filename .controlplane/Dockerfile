@@ -3,8 +3,6 @@ ARG RUBY_VERSION=3.1.2
 FROM docker.io/library/node:22-bullseye-slim AS node
 FROM ruby:$RUBY_VERSION
 
-RUN apt-get update
-
 WORKDIR /app
 
 # Keep Node.js available both for asset compilation and for SSR runtimes that
@@ -22,7 +20,7 @@ RUN printf '%s\n' '#!/bin/sh' 'exec corepack yarn "$@"' > /usr/bin/yarn && \
 COPY Gemfile* ./
 
 RUN bundle config set without 'development test' && \
-    bundle config set with 'staging production' && \
+    bundle config set with 'production' && \
     bundle install --jobs=3 --retry=3
 
 COPY . ./
