@@ -4,6 +4,8 @@ run-name: Deploy Control Plane staging app
 
 on:
   push:
+    # GitHub does not allow repository vars in branch filters, so this workflow listens to
+    # every branch and exits early unless the ref matches STAGING_APP_BRANCH/main/master.
     branches: ["**"]
   workflow_dispatch:
 

@@ -59,7 +59,7 @@ runs:
           eval "$(ssh-agent -s)"
           trap 'ssh-agent -k >/dev/null' EXIT
           ssh-add - <<< "${{ inputs.docker_build_ssh_key }}"
-          docker_build_args+=("--ssh default")
+          docker_build_args+=("--ssh" "default")
         fi
 
         echo "🏗️ Building Docker image${PR_INFO} (commit ${{ inputs.commit }})..."
