@@ -1,0 +1,6 @@
+kind: volumeset
+name: app-db
+spec:
+  fileSystemType: ext4
+  initialCapacity: 5
+  performanceClass: general-purpose-ssd

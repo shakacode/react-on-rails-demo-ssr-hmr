@@ -1,0 +1,45 @@
+# Keys beginning with "cpln_" correspond to your settings in Control Plane.
+#
+# This demo stores its SQLite database under `/app/db` and local Active Storage
+# files under `/app/storage`, so both directories need persistent volumes.
+
+allow_org_override_by_env: true
+allow_app_override_by_env: true
+
+aliases:
+  common: &common
+    cpln_org: my-org-staging
+    default_location: aws-us-east-2
+    setup_app_templates:
+      - app
+      - db
+      - storage
+      - rails
+
+    one_off_workload: rails
+    app_workloads:
+      - rails
+    additional_workloads: []
+
+    release_script: release_script.sh
+
+    stale_app_image_deployed_days: 5
+    image_retention_days: 7
+
+  production: &production
+    <<: *common
+    allow_org_override_by_env: false
+    allow_app_override_by_env: false
+    cpln_org: my-org-production
+    upstream: react-on-rails-demo-ssr-hmr-staging
+
+apps:
+  react-on-rails-demo-ssr-hmr-staging:
+    <<: *common
+
+  react-on-rails-demo-ssr-hmr-review:
+    <<: *common
+    match_if_app_name_starts_with: true
+
+  react-on-rails-demo-ssr-hmr-production:
+    <<: *production
