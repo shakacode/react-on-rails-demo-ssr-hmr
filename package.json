@@ -22,7 +22,7 @@
     "pnp-webpack-plugin": "^1.7.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-on-rails": "14.0.3",
+    "react-on-rails": "16.7.0-rc.0",
     "shakapacker": "8.0.0",
     "style-loader": "^3.3.2",
     "terser-webpack-plugin": "^5.3.8",

@@ -164,7 +164,7 @@ GEM
     rb-fsevent (0.11.2)
     rb-inotify (0.10.1)
       ffi (~> 1.0)
-    react_on_rails (14.0.3)
+    react_on_rails (16.7.0.rc.0)
       addressable
       connection_pool
       execjs (~> 2.5)
@@ -245,7 +245,7 @@ DEPENDENCIES
   psych (< 4)
   puma (~> 4.1)
   rails (~> 6.1)
-  react_on_rails (= 14.0.3)
+  react_on_rails (= 16.7.0.rc.0)
   rspec-rails (~> 6.0.0)
   selenium-webdriver (>= 4.9)
   shakapacker (= 8.0.0)

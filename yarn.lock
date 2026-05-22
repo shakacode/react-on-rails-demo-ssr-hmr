@@ -1457,16 +1457,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/runtime-corejs3@npm:^7.12.5":
-  version: 7.14.7
-  resolution: "@babel/runtime-corejs3@npm:7.14.7"
-  dependencies:
-    core-js-pure: ^3.15.0
-    regenerator-runtime: ^0.13.4
-  checksum: 9e49fc27e4de9fd5a97069aeeb0746cf0e42afe2068fa717a8abec740782a58d6bb1dc635c37a7bd47c40f3945fabad6308a44915520e15c7651f34b24b89d6f
-  languageName: node
-  linkType: hard
-
 "@babel/runtime@npm:^7.12.5":
   version: 7.15.4
   resolution: "@babel/runtime@npm:7.15.4"
@@ -3244,13 +3234,6 @@ __metadata:
   dependencies:
     browserslist: ^4.21.5
   checksum: 4c81d635559eebc2f81db60f5095a235f580a2f90698113c4124c72761393592b139e30974cce6095a9a6aad6bb3cd467b24b20c32e77ed24ca74eb5944d0638
-  languageName: node
-  linkType: hard
-
-"core-js-pure@npm:^3.15.0":
-  version: 3.15.1
-  resolution: "core-js-pure@npm:3.15.1"
-  checksum: e4053f6f3ab4268f991d76f4c3f918cfa5a95182d0c5ddcc32d381bc208318b5817db8fb01d531363a7d110b46ea1c6ffb14e832f661bfea3e213d52d9b92658
   languageName: node
   linkType: hard
 
@@ -6811,16 +6794,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-on-rails@npm:14.0.3":
-  version: 14.0.3
-  resolution: "react-on-rails@npm:14.0.3"
-  dependencies:
-    "@babel/runtime-corejs3": ^7.12.5
+"react-on-rails@npm:16.7.0-rc.0":
+  version: 16.7.0-rc.0
+  resolution: "react-on-rails@npm:16.7.0-rc.0"
   peerDependencies:
-    js-yaml: ">= 3.0.0"
     react: ">= 16"
     react-dom: ">= 16"
-  checksum: dcee79c30b9aac5ba4e8d935afdfd11fa21a345fdf20c196ec5728a070dbc8dddd6b8cd52bfe01a5226dbf63ef4c514a3ea2a55a013ec4f7dba149662cfceea1
+  checksum: 7086755cd526094505ed2f1dfdde0257b51353c99e01425704b5d5d804fd0fc3ed89489638971da6dd521dad0fdb8fb0a451cb95e8495735617a0e503c565ca4
   languageName: node
   linkType: hard
 
@@ -7180,7 +7160,7 @@ __metadata:
     pnp-webpack-plugin: ^1.7.0
     react: ^18.2.0
     react-dom: ^18.2.0
-    react-on-rails: 14.0.3
+    react-on-rails: 16.7.0-rc.0
     react-refresh: ^0.14.0
     shakapacker: 8.0.0
     style-loader: ^3.3.2
