@@ -8,6 +8,9 @@ spec:
       value: "true"
     - name: RAILS_SERVE_STATIC_FILES
       value: "true"
+    # Review apps run pull request code. Values mounted through cpln://secret
+    # become readable by that code after the workload starts, so review-app
+    # secret dictionaries must contain review-safe values.
     - name: SECRET_KEY_BASE
       value: cpln://secret/{{APP_SECRETS}}.SECRET_KEY_BASE
   staticPlacement:
