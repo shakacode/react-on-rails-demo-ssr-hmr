@@ -1457,16 +1457,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/runtime-corejs3@npm:^7.12.5":
-  version: 7.14.7
-  resolution: "@babel/runtime-corejs3@npm:7.14.7"
-  dependencies:
-    core-js-pure: ^3.15.0
-    regenerator-runtime: ^0.13.4
-  checksum: 9e49fc27e4de9fd5a97069aeeb0746cf0e42afe2068fa717a8abec740782a58d6bb1dc635c37a7bd47c40f3945fabad6308a44915520e15c7651f34b24b89d6f
-  languageName: node
-  linkType: hard
-
 "@babel/runtime@npm:^7.12.5":
   version: 7.15.4
   resolution: "@babel/runtime@npm:7.15.4"
@@ -2672,6 +2662,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"babel-plugin-transform-react-remove-prop-types@npm:^0.4.24":
+  version: 0.4.24
+  resolution: "babel-plugin-transform-react-remove-prop-types@npm:0.4.24"
+  checksum: 54afe56d67f0d118c9da23996f39948e502a152b3f582eb6e8f163fcb76c2c1ea4e0cdd4f9fac5c0ef050eab4fe0a950b0b74aae6237bcc0d31d8fc4cc808d1a
+  languageName: node
+  linkType: hard
+
 "bail@npm:^2.0.0":
   version: 2.0.2
   resolution: "bail@npm:2.0.2"
@@ -3244,13 +3241,6 @@ __metadata:
   dependencies:
     browserslist: ^4.21.5
   checksum: 4c81d635559eebc2f81db60f5095a235f580a2f90698113c4124c72761393592b139e30974cce6095a9a6aad6bb3cd467b24b20c32e77ed24ca74eb5944d0638
-  languageName: node
-  linkType: hard
-
-"core-js-pure@npm:^3.15.0":
-  version: 3.15.1
-  resolution: "core-js-pure@npm:3.15.1"
-  checksum: e4053f6f3ab4268f991d76f4c3f918cfa5a95182d0c5ddcc32d381bc208318b5817db8fb01d531363a7d110b46ea1c6ffb14e832f661bfea3e213d52d9b92658
   languageName: node
   linkType: hard
 
@@ -6811,16 +6801,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-on-rails@npm:14.0.3":
-  version: 14.0.3
-  resolution: "react-on-rails@npm:14.0.3"
-  dependencies:
-    "@babel/runtime-corejs3": ^7.12.5
+"react-on-rails@npm:17.0.0-rc.3":
+  version: 17.0.0-rc.3
+  resolution: "react-on-rails@npm:17.0.0-rc.3"
   peerDependencies:
-    js-yaml: ">= 3.0.0"
     react: ">= 16"
     react-dom: ">= 16"
-  checksum: dcee79c30b9aac5ba4e8d935afdfd11fa21a345fdf20c196ec5728a070dbc8dddd6b8cd52bfe01a5226dbf63ef4c514a3ea2a55a013ec4f7dba149662cfceea1
+  checksum: 998f8d0ec7988f87d532a23f384da88dd7e75a56d517579ee689d182f5cb718139807dbee1f8792f02d41d66ffe0c36b857af62ff0d7737197f6607bcb5d1d90
   languageName: node
   linkType: hard
 
@@ -7172,6 +7159,7 @@ __metadata:
     "@types/react-dom": ^18.2.4
     babel-loader: ^9.1.2
     babel-plugin-macros: ^3.1.0
+    babel-plugin-transform-react-remove-prop-types: ^0.4.24
     compression-webpack-plugin: ^10.0.0
     css-loader: ^6.7.3
     css-minimizer-webpack-plugin: ^5.0.0
@@ -7180,7 +7168,7 @@ __metadata:
     pnp-webpack-plugin: ^1.7.0
     react: ^18.2.0
     react-dom: ^18.2.0
-    react-on-rails: 14.0.3
+    react-on-rails: 17.0.0-rc.3
     react-refresh: ^0.14.0
     shakapacker: 8.0.0
     style-loader: ^3.3.2
