@@ -1,7 +1,7 @@
-const { merge, config } = require('shakapacker')
 const commonWebpackConfig = require('./commonWebpackConfig')
 
 const webpack = require('webpack')
+const { resolve } = require('path')
 
 const configureServer = () => {
   // We need to use "merge" because the clientConfigObject, EVEN after running
@@ -48,8 +48,8 @@ const configureServer = () => {
     globalObject: 'this',
     // If using the React on Rails Pro node server renderer, uncomment the next line
     // libraryTarget: 'commonjs2',
-    path: config.outputPath,
-    publicPath: config.publicPath,
+    path: resolve(__dirname, '../../ssr-generated'),
+    publicPath: '',
     // https://webpack.js.org/configuration/output/#outputglobalobject
   }
 

@@ -76,6 +76,7 @@ RSpec.configure do |config|
 
   # Capybara config
   config.include Capybara::DSL
+  ReactOnRails::TestHelper.configure_rspec_to_compile_assets(config)
   #
   # selenium_firefox webdriver only works for Travis-CI builds.
   default_driver = :selenium_chrome_headless
