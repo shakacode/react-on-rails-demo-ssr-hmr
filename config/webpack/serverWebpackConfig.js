@@ -9,6 +9,7 @@ const configureServer = () => {
   // entry value will result in changing the client config!
   // Using webpack-merge into an empty object avoids this issue.
   const serverWebpackConfig = commonWebpackConfig()
+  const publicPath = serverWebpackConfig.output.publicPath
 
   // We just want the single server bundle entry
   const serverEntry = {
@@ -49,7 +50,7 @@ const configureServer = () => {
     // If using the React on Rails Pro node server renderer, uncomment the next line
     // libraryTarget: 'commonjs2',
     path: resolve(__dirname, '../../ssr-generated'),
-    publicPath: '',
+    publicPath,
     // https://webpack.js.org/configuration/output/#outputglobalobject
   }
 
