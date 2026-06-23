@@ -35,6 +35,7 @@
 
 /public/packs
 /public/packs-test
+/ssr-generated
 /node_modules
 
 .pnp.*
