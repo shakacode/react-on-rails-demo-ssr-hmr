@@ -1,0 +1,41 @@
+# Grouped Dependabot updates: one PR per ecosystem (Ruby / JavaScript / GitHub Actions)
+# instead of one PR per dependency. Tracks npm so the shakapacker gem and npm
+# package move together. 3-day cooldown so a freshly published version can't be
+# yanked after the PR opens. Patterned on shakacode/react_on_rails.
+version: 2
+updates:
+  - package-ecosystem: "bundler"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    cooldown:
+      default-days: 3
+    groups:
+      ruby:
+        patterns:
+          - "*"
+
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    cooldown:
+      default-days: 3
+    groups:
+      javascript:
+        patterns:
+          - "*"
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    cooldown:
+      default-days: 3
+    groups:
+      github-actions:
+        patterns:
+          - "*"
