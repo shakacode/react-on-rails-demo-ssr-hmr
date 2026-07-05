@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 import type { FunctionComponent } from 'react'
 
 import HelloWorldMdx from './HelloWorld.mdx'
-import style from './HelloWorld.module.css'
+import * as style from './HelloWorld.module.css'
 import logo from './logo.svg'
 
 export interface Props {
