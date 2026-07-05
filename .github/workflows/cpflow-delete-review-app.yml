@@ -1,0 +1,36 @@
+name: Delete Review App
+
+on:
+  pull_request_target:
+    types: [closed]
+  issue_comment:
+    types: [created]
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: Pull request number targeted for deletion
+        required: true
+        type: number
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
+jobs:
+  delete-review-app:
+    # pull_request_target is intentional: fork PR-close events need access to
+    # staging secrets to delete review apps and update PR comments. The upstream
+    # reusable workflow checks out trusted base-branch action code, not fork code.
+    if: |
+      (github.event_name == 'issue_comment' &&
+       github.event.issue.pull_request &&
+       contains(fromJson('["+review-app-delete","+review-app-delete\n","+review-app-delete\r\n"]'), github.event.comment.body) &&
+       contains(fromJson('["OWNER","MEMBER","COLLABORATOR"]'), github.event.comment.author_association)) ||
+      (github.event_name == 'pull_request_target' && github.event.action == 'closed') ||
+      github.event_name == 'workflow_dispatch'
+    # This `if:` mirrors the upstream job guard to avoid a billable workflow_call
+    # when the event does not match. Keep both conditions in sync.
+    uses: shakacode/control-plane-flow/.github/workflows/cpflow-delete-review-app.yml@v5.1.1
+    secrets:
+      CPLN_TOKEN_STAGING: ${{ secrets.CPLN_TOKEN_STAGING }}

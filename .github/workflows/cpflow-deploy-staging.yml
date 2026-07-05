@@ -1,0 +1,24 @@
+name: Deploy Staging to Control Plane
+
+run-name: Deploy Control Plane staging app
+
+on:
+  push:
+    # GitHub does not allow repository vars in branch filters. Default to the common
+    # deploy branches unless `cpflow generate-github-actions --staging-branch BRANCH`
+    # was used. If STAGING_APP_BRANCH is later changed in repository variables, keep
+    # this list in sync so pushes to that branch actually trigger the workflow.
+    branches: ["**"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  deploy-staging:
+    uses: shakacode/control-plane-flow/.github/workflows/cpflow-deploy-staging.yml@v5.1.1
+    with:
+      staging_app_branch_default: "**"
+    secrets:
+      CPLN_TOKEN_STAGING: ${{ secrets.CPLN_TOKEN_STAGING }}
+      DOCKER_BUILD_SSH_KEY: ${{ secrets.DOCKER_BUILD_SSH_KEY }}

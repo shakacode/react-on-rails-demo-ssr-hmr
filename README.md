@@ -86,6 +86,12 @@ documentation for more information about this feature.
 1. `RAILS_ENV=production rake assets:precompile`
 1. `rails s -e production`
 
+## Control Plane Flow
+
+This repo now includes shared `cpflow` scaffolding for review apps, automatic
+staging deploys from `master`, and manual production promotion. See
+`.controlplane/readme.md` for the required Control Plane and GitHub setup.
+
 ## Debugging the webpack setup
 
 1. Uncomment the debugger line at the end of file `config/webpack/webpack.config.js`

@@ -1,0 +1,6 @@
+kind: volumeset
+name: app-storage
+spec:
+  fileSystemType: ext4
+  initialCapacity: 10
+  performanceClass: general-purpose-ssd
