@@ -1,6 +1,6 @@
 {
   "engines": {
-    "node": ">=12.13.0",
+    "node": "^20.19.0 || >=22.12.0",
     "yarn": ">=1 <4"
   },
   "dependencies": {
@@ -16,29 +16,29 @@
     "babel-loader": "^9.1.2",
     "babel-plugin-macros": "^3.1.0",
     "compression-webpack-plugin": "^10.0.0",
-    "css-loader": "^6.7.3",
+    "css-loader": "^7.1.4",
     "css-minimizer-webpack-plugin": "^5.0.0",
     "mini-css-extract-plugin": "^2.7.5",
     "pnp-webpack-plugin": "^1.7.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-on-rails": "17.0.0-rc.6",
-    "shakapacker": "8.0.0",
+    "shakapacker": "10.2.0",
     "style-loader": "^3.3.2",
     "terser-webpack-plugin": "^5.3.8",
     "typescript": "^5.0.4",
-    "webpack": "^5.82.0",
+    "webpack": "^5.101.0",
     "webpack-assets-manifest": "^5.1.0",
     "webpack-cli": "^5.1.1",
     "webpack-merge": "^5.8.0",
     "webpack-sources": "^3.2.3"
   },
   "devDependencies": {
-    "@pmmmwh/react-refresh-webpack-plugin": "^0.5.10",
+    "@pmmmwh/react-refresh-webpack-plugin": "^0.6.2",
     "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
     "fork-ts-checker-webpack-plugin": "^8.0.0",
     "react-refresh": "^0.14.0",
-    "webpack-dev-server": "^4.15.0"
+    "webpack-dev-server": "^5.2.2"
   },
   "packageManager": "yarn@3.2.1"
 }
