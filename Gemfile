@@ -55,7 +55,3 @@ gem "shakapacker", "10.2.0"
 gem "react_on_rails", "17.0.0.rc.6"
 
 gem "net-smtp", "~> 0.5.1"
-
-# Psych 4+ comes with breakibg changes in Ruby 3.1.0. Though the issue are
-# addressed in Rails 7. So remove this the next line in Rails 7.
-gem 'psych', '< 6'

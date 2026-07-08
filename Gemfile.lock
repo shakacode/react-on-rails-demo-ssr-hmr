@@ -162,9 +162,6 @@ GEM
       prettyprint
     prettyprint (0.2.0)
     prism (1.9.0)
-    psych (5.4.0)
-      date
-      stringio
     public_suffix (7.0.5)
     puma (8.0.2)
       nio4r (~> 2.0)
@@ -273,7 +270,6 @@ GEM
     sqlite3 (2.9.5-arm64-darwin)
     sqlite3 (2.9.5-x86_64-darwin)
     sqlite3 (2.9.5-x86_64-linux-gnu)
-    stringio (3.2.0)
     thor (1.5.0)
     timeout (0.6.1)
     tsort (0.2.0)
@@ -307,7 +303,6 @@ DEPENDENCIES
   jbuilder (~> 2.15)
   listen (~> 3.10)
   net-smtp (~> 0.5.1)
-  psych (< 6)
   puma (~> 8.0)
   rails (~> 8.1)
   react_on_rails (= 17.0.0.rc.6)
