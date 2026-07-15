@@ -11,3 +11,9 @@ Codex does not need to ask again before running `gh pr ready` under those
 conditions. If required checks are failing, review-app verification is broken,
 or blocking feedback remains unresolved, leave the pull request as draft and
 report the blocker instead.
+
+## Agent Workflow Configuration
+
+Portable shared skills resolve this repo's commands and policy through:
+- **Commands** — run `.agents/bin/<name>` (`setup`, `validate`, `test`, ...); see `.agents/bin/README.md`. A missing script means that capability is n/a here.
+- **Policy / config** — `.agents/agent-workflow.yml`.

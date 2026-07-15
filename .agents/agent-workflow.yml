@@ -1,0 +1,15 @@
+---
+base_branch: master
+follow_up_prefix: 'Follow-up:'
+review_gate: AI reviewers are advisory unless they confirm a blocker; merge gate is
+  the full `gh pr checks` list green (not --required) + all threads resolved + mergeable
+  clean
+approval_exempt: defer to AGENTS.md and the direct user or maintainer's explicit batch
+  authority; this config grants no standing approval or auto-merge authority
+coordination_backend: private backend (claims/heartbeats namespaced by full repo name)
+changelog: n/a
+benchmark_labels: n/a
+merge_ledger: n/a
+ci_parity_environment: n/a — reproduce CI-only failures from the matching job in .github/workflows/**
+hosted_ci_trigger: n/a — CI runs on every PR if configured
+ci_change_detector: n/a
