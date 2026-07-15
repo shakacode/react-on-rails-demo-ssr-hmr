@@ -8,7 +8,7 @@ means that capability is n/a here.
 | Script | Purpose | This repo runs |
 | --- | --- | --- |
 | `setup` | Install dependencies | `bundle install` + `yarn install` |
-| `validate` | Pre-push gate | `bundle exec rake` |
+| `validate` | Pre-push gate | `bundle exec rspec "$@"` |
 | `test` | Run tests | `bundle exec rspec "$@"` |
 | `lint` | Lint / format | n/a |
 | `build` | Build / type-check | n/a |

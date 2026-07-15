@@ -3,4 +3,4 @@
 # Pre-push gate.
 set -euo pipefail
 cd "$(CDPATH= cd -- "$(dirname -- "$0")/../.." && pwd)"
-exec bundle exec rake
+exec bundle exec rspec "$@"
