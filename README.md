@@ -25,9 +25,12 @@ See the [commit history](https://github.com/shakacode/react_on_rails_tutorial_wi
 
 ```bash
 git clone git@github.com:shakacode/react_on_rails_demo_ssr_hmr.git
-bundle install
-yarn install
+bin/setup
+corepack yarn install
 ```
+
+`corepack yarn` activates the Yarn 3.2.1 release pinned by this repository's
+`packageManager` field and `.yarnrc.yml`.
 
 Use the provided Procfiles to run webpack and rails together, like `overmind start -f Procfile.dev`
 
