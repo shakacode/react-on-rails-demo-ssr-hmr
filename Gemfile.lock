@@ -220,7 +220,7 @@ GEM
       prism (>= 1.6.0)
       rbs (>= 4.0.0)
       tsort
-    react_on_rails (17.0.0.rc.6)
+    react_on_rails (17.0.0.rc.9)
       addressable
       connection_pool
       execjs (~> 2.5)
@@ -305,7 +305,7 @@ DEPENDENCIES
   net-smtp (~> 0.5.1)
   puma (~> 8.0)
   rails (~> 8.1)
-  react_on_rails (= 17.0.0.rc.6)
+  react_on_rails (= 17.0.0.rc.9)
   rspec-rails (~> 8.0.4)
   selenium-webdriver (>= 4.9)
   shakapacker (= 10.2.0)
