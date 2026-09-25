@@ -24,6 +24,9 @@ AI reviewers are advisory unless they report a blocker. Before merging, require
 every current-head `gh pr checks` entry to pass, all review threads to be
 resolved, and GitHub to report clean mergeability. The seam grants no standing
 approval or merge authority; follow the direct user or maintainer instruction.
+The predecessor `merge_submission: direct` selected a submission method after
+authorization; it did not grant standing merge authority. The typed seam's
+`merge.preference: ask` preserves that boundary.
 The local validation wrapper runs RSpec; it does not replace hosted PR checks.
 
 Prefix follow-up issue titles with `Follow-up:`.

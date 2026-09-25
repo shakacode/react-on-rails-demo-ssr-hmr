@@ -3,6 +3,7 @@
 version: 1
 base_branch: master
 review:
+  # No CI review report is required; AGENTS.md still requires the full check, thread, and mergeability gate.
   required: none
 merge:
   preference: ask
