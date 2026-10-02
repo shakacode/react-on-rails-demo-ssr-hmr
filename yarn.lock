@@ -7061,13 +7061,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-on-rails@npm:17.1.0":
-  version: 17.1.0
-  resolution: "react-on-rails@npm:17.1.0"
+"react-on-rails@npm:17.2.0-rc.0":
+  version: 17.2.0-rc.0
+  resolution: "react-on-rails@npm:17.2.0-rc.0"
   peerDependencies:
     react: ">= 16"
     react-dom: ">= 16"
-  checksum: 1c44620bf8e05df75cc481bd00d3201569aad4552245f0ef8ab8c5e186f8f18c468333699a74066c94ceeb358acf7ae9f2f5bbbd3fac38d5a6794bea8b31720f
+  checksum: b3d8dfe812e506f76550240193358a7722e31caecde442dc09dccc57086c0e29c164c8d1539849cbfbb7c90e1963302c2c5986506bab26b53d9c191420a08542
   languageName: node
   linkType: hard
 
@@ -7434,7 +7434,7 @@ __metadata:
     pnp-webpack-plugin: ^1.7.0
     react: ^19.2.7
     react-dom: ^19.2.7
-    react-on-rails: 17.1.0
+    react-on-rails: 17.2.0-rc.0
     react-refresh: ^0.18.0
     shakapacker: 10.2.0
     style-loader: ^4.0.0
