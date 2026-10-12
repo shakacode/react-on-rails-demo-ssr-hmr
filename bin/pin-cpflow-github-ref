@@ -2,19 +2,28 @@
 # frozen_string_literal: true
 
 require "pathname"
+require "optparse"
 
 USAGE = <<~USAGE
-  Usage: bin/pin-cpflow-github-ref [--allow-moving-ref] <control-plane-flow-ref>
+  Usage: bin/pin-cpflow-github-ref [--version TAG] [--allow-moving-ref] <control-plane-flow-ref>
 
   Use a release tag for normal operation, e.g. v5.0.0.
   Use a full 40-character commit SHA for temporary unreleased upstream testing.
+  --version TAG supplies the reviewed v-prefixed version/tag for SHA comments
+  (required for a SHA; no default). Verify the tag/version against upstream first.
+  This helper does not resolve tags over the network or verify tag-to-SHA identity.
   This updates generated reusable-workflow `uses:` refs plus the production
   workflow's pinned control-plane-flow checkout and setup validation ref.
   Regenerate from the cpflow gem when templates changed.
   Use --allow-moving-ref only for short-lived local branch/ref experiments.
+  Use -h or --help to show this help.
 USAGE
 
-ALLOWED_OPTIONS = ["--allow-moving-ref"].freeze
+if ARGV.include?("--help") || ARGV.include?("-h")
+  puts USAGE
+  exit 0
+end
+
 FULL_COMMIT_SHA = /\A[0-9a-f]{40}\z/i
 RELEASE_TAG = /\Av\d+\.\d+\.\d+(?:[-.][0-9A-Za-z][0-9A-Za-z.-]*)?\z/
 PRODUCTION_WORKFLOW_REF = "shakacode/control-plane-flow/.github/workflows/" \
@@ -25,14 +34,19 @@ CPFLOW_CHECKOUT_REF_PATTERN = %r{
     ^\s+repository:\s+shakacode/control-plane-flow\s*\n
     (?:(?!^\s*-\s+name:).)*?
     ^\s+ref:\s+)
-  [^\s]+
+  [^\s\#]+ [\t\ ]* (?:\#[^\n]*)?
 }mx
 
-options, positional = ARGV.partition { |arg| arg.start_with?("--") }
-unknown_options = options - ALLOWED_OPTIONS
-
-unless unknown_options.empty?
-  warn "Unknown option(s): #{unknown_options.join(', ')}"
+version = nil
+allow_moving_ref = false
+parser = OptionParser.new do |options|
+  options.on("--version TAG") { |value| version = value }
+  options.on("--allow-moving-ref") { allow_moving_ref = true }
+end
+begin
+  positional = parser.parse(ARGV)
+rescue OptionParser::ParseError => e
+  warn e.message
   warn USAGE
   exit 1
 end
@@ -43,12 +57,20 @@ unless positional.length == 1
 end
 
 ref = positional.first
-allow_moving_ref = options.include?("--allow-moving-ref")
 
 unless ref.match?(%r{\A[0-9A-Za-z._/-]+\z})
   warn "Ref contains unsupported characters: #{ref.inspect}"
   exit 1
 end
+
+if (version && !version.match?(RELEASE_TAG)) || (ref.match?(FULL_COMMIT_SHA) && !version)
+  warn "A SHA pin requires --version TAG with a reviewed v-prefixed version/tag (for example v6.0.0.rc.0)."
+  warn USAGE
+  exit 1
+end
+
+ref = ref.downcase if ref.match?(FULL_COMMIT_SHA)
+annotated_ref = ref.match?(FULL_COMMIT_SHA) ? "#{ref} # #{version}" : ref
 
 unless ref.match?(FULL_COMMIT_SHA) || ref.match?(RELEASE_TAG) || allow_moving_ref
   warn "Ref must be a full 40-character commit SHA or a v-prefixed release tag: #{ref.inspect}"
@@ -68,11 +90,13 @@ changed = []
 workflow_paths.each do |path|
   text = File.read(path)
   production_setup_ref_pattern =
-    /(control_plane_flow_ref:\s+#{Regexp.escape(PRODUCTION_WORKFLOW_REF)}@)[^\s]+/
+    /(control_plane_flow_ref:\s+#{Regexp.escape(PRODUCTION_WORKFLOW_REF)}@)[^\s#]+[\t ]*(?:#[^\n]*)?/
+  workflow_ref_pattern =
+    %r{(uses:\s+shakacode/control-plane-flow/\.github/workflows/[^@\s]+@)[^\s#]+[\t ]*(?:#[^\n]*)?}
   updated = text
-            .gsub(%r{(uses:\s+shakacode/control-plane-flow/\.github/workflows/[^@\s]+@)[^\s]+}, "\\1#{ref}")
-            .gsub(production_setup_ref_pattern, "\\1#{ref}")
-            .gsub(CPFLOW_CHECKOUT_REF_PATTERN, "\\1#{ref}")
+            .gsub(workflow_ref_pattern) { "#{Regexp.last_match(1)}#{annotated_ref}" }
+            .gsub(production_setup_ref_pattern) { "#{Regexp.last_match(1)}#{annotated_ref}" }
+            .gsub(CPFLOW_CHECKOUT_REF_PATTERN) { "#{Regexp.last_match(1)}#{annotated_ref}" }
 
   next if updated == text
 
