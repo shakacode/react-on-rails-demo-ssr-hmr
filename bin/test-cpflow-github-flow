@@ -16,10 +16,92 @@ echo "==> parse generated GitHub Actions YAML"
 ruby <<'RUBY'
 require "yaml"
 
-Dir[".github/actions/**/action.yml", ".github/workflows/*.yml"].sort.each do |path|
-  YAML.load_file(path, aliases: true)
+documents = Dir[
+  ".github/actions/**/action.yml",
+  ".github/actions/**/action.yaml",
+  ".github/workflows/*.yml",
+  ".github/workflows/*.yaml"
+].sort.to_h do |path|
+  [path, YAML.load_file(path, aliases: true)]
+end
+
+documents.each_key do |path|
   puts "parsed #{path}"
 end
+
+# Current workflows load cpflow actions from the pinned `.cpflow` checkout, which exists
+# only at run time. Caller-owned `.github/actions/cpflow-*` copies are the cpflow 6.0.0
+# layout; a workflow that still references one needs that copy checked in.
+generated_local_action_pattern =
+  %r{\A\./(?<checkout>\.cpflow/)?(?<directory>\.github/actions/cpflow-[a-z0-9]+(?:-[a-z0-9]+)*)\z}
+local_action_references = []
+invalid_local_action_references = []
+visited_container_ids = {}
+walk = lambda do |node, source_path|
+  if node.is_a?(Hash) || node.is_a?(Array)
+    next if visited_container_ids.key?(node.object_id)
+
+    visited_container_ids[node.object_id] = true
+  end
+
+  case node
+  when Hash
+    uses = node["uses"]
+    if uses.is_a?(String) && uses.start_with?("./.github/actions/cpflow-", "./.cpflow/")
+      match = uses.match(generated_local_action_pattern)
+      if match
+        local_action_references << [source_path, match[:directory]] unless match[:checkout]
+      else
+        invalid_local_action_references <<
+          "#{source_path} has invalid generated local action reference #{uses}"
+      end
+    end
+    node.each_value { |value| walk.call(value, source_path) }
+  when Array
+    node.each { |value| walk.call(value, source_path) }
+  end
+end
+documents.each { |path, document| walk.call(document, path) }
+
+abort invalid_local_action_references.uniq.join("\n") unless invalid_local_action_references.empty?
+
+# `.cpflow` exists only after a job checks it out, so each job must do that before its first cpflow action.
+missing_checkouts = documents.flat_map do |path, document|
+  jobs = document.is_a?(Hash) && document["jobs"].is_a?(Hash) ? document["jobs"] : {}
+  jobs.filter_map do |job_name, job|
+    steps = job.is_a?(Hash) && job["steps"].is_a?(Array) ? job["steps"].grep(Hash) : []
+    first_action = steps.index { |step| step["uses"].to_s.start_with?("./.cpflow/") }
+    next unless first_action
+
+    checked_out = steps.take(first_action).any? do |step|
+      step["uses"].to_s.start_with?("actions/checkout@") &&
+        step["with"].is_a?(Hash) && step["with"]["path"] == ".cpflow" && !step["with"]["ref"].to_s.strip.empty?
+    end
+    "#{path}:#{job_name} must check out a pinned ref into .cpflow before its first cpflow action" unless checked_out
+  end
+end
+
+abort missing_checkouts.join("\n") unless missing_checkouts.empty?
+
+missing_actions = local_action_references.uniq.filter_map do |source_path, action_directory|
+  directory_is_local = begin
+    File.lstat(action_directory).directory?
+  rescue Errno::ENOENT
+    false
+  end
+  descriptor_is_local = %w[action.yml action.yaml].any? do |filename|
+    begin
+      File.lstat(File.join(action_directory, filename)).file?
+    rescue Errno::ENOENT
+      false
+    end
+  end
+
+  "#{source_path} references missing local action #{action_directory}" unless directory_is_local && descriptor_is_local
+end
+
+abort missing_actions.join("\n") unless missing_actions.empty?
+puts "all cpflow action references use the pinned checkout or a checked-in descriptor"
 RUBY
 
 echo "==> check composite action input descriptions"
@@ -45,7 +127,7 @@ require "yaml"
 CONTROL_PLANE_FLOW_WORKFLOW = %r{\Ashakacode/control-plane-flow/\.github/workflows/[^@\s]+@([^\s]+)\z}
 PROMOTE_WORKFLOW = %r{\Ashakacode/control-plane-flow/\.github/workflows/cpflow-promote-staging-to-production\.yml@([^\s]+)\z}
 EXPECTED_PROMOTE_WORKFLOW_REF_FORMAT = "shakacode/control-plane-flow/.github/workflows/cpflow-promote-staging-to-production.yml@vX.Y.Z"
-EXPECTED_CPFLOW_CHECKOUT_ACTION = "actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd"
+EXPECTED_CPFLOW_CHECKOUT_ACTION = "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1"
 EXPECTED_CPFLOW_CHECKOUT_REPOSITORY = "shakacode/control-plane-flow"
 
 refs = Hash.new { |hash, key| hash[key] = [] }
@@ -82,60 +164,65 @@ Dir[".github/workflows/cpflow-*.yml"].sort.each do |path|
 end
 
 promote_path = ".github/workflows/cpflow-promote-staging-to-production.yml"
-promote_doc = YAML.load_file(promote_path, aliases: true)
-promote_job = promote_doc.fetch("jobs", {})["promote-to-production"]
+if File.exist?(promote_path)
+  promote_doc = YAML.load_file(promote_path, aliases: true)
+  promote_job = promote_doc.fetch("jobs", {})["promote-to-production"]
 
-unless promote_job
-  abort "#{promote_path}:promote-to-production job is missing"
+  unless promote_job
+    abort "#{promote_path}:promote-to-production job is missing"
+  end
+
+  if promote_job.key?("uses")
+    abort "#{promote_path}:promote-to-production must run as a normal caller-repo job, not a reusable workflow, so GitHub can expose production environment secrets"
+  end
+
+  # Older generated workflows use the string form; current ones add a deployment URL.
+  promote_environment = promote_job["environment"]
+  promote_environment = promote_environment["name"] if promote_environment.is_a?(Hash)
+  unless promote_environment.to_s == "production"
+    abort "#{promote_path}:promote-to-production must declare environment: production"
+  end
+
+  checkout_step = Array(promote_job["steps"]).find { |step| step["name"] == "Checkout control-plane-flow actions" }
+
+  unless checkout_step
+    abort "#{promote_path}:promote-to-production must include a Checkout control-plane-flow actions step"
+  end
+
+  unless checkout_step["uses"] == EXPECTED_CPFLOW_CHECKOUT_ACTION
+    abort "#{promote_path}:promote-to-production must use #{EXPECTED_CPFLOW_CHECKOUT_ACTION} for the Checkout control-plane-flow actions step"
+  end
+
+  checkout_with = checkout_step.fetch("with", {})
+  checkout_repository = checkout_with["repository"]
+  checkout_ref = checkout_with["ref"]
+
+  unless checkout_repository == EXPECTED_CPFLOW_CHECKOUT_REPOSITORY
+    abort "#{promote_path}:promote-to-production must check out #{EXPECTED_CPFLOW_CHECKOUT_REPOSITORY}"
+  end
+
+  if checkout_ref.to_s.strip.empty?
+    abort "#{promote_path}:promote-to-production must pin the Checkout control-plane-flow actions step"
+  end
+
+  refs[checkout_ref] << "#{promote_path}:promote-to-production"
+
+  setup_step = Array(promote_job["steps"]).find { |step| step["name"] == "Setup production environment" }
+
+  unless setup_step
+    abort "#{promote_path}:promote-to-production must include a Setup production environment step"
+  end
+
+  setup_ref = setup_step.fetch("with", {})["control_plane_flow_ref"]
+  setup_match = setup_ref.to_s.match(PROMOTE_WORKFLOW)
+
+  unless setup_match
+    abort "#{promote_path}:promote-to-production must pass a pinned production control_plane_flow_ref to setup, " \
+          "for example #{EXPECTED_PROMOTE_WORKFLOW_REF_FORMAT}"
+  end
+
+  refs[setup_match[1]] << "#{promote_path}:promote-to-production setup"
 end
-
-if promote_job.key?("uses")
-  abort "#{promote_path}:promote-to-production must run as a normal caller-repo job, not a reusable workflow, so GitHub can expose production environment secrets"
-end
-
-unless promote_job["environment"].to_s == "production"
-  abort "#{promote_path}:promote-to-production must declare environment: production"
-end
-
-checkout_step = Array(promote_job["steps"]).find { |step| step["name"] == "Checkout control-plane-flow actions" }
-
-unless checkout_step
-  abort "#{promote_path}:promote-to-production must include a Checkout control-plane-flow actions step"
-end
-
-unless checkout_step["uses"] == EXPECTED_CPFLOW_CHECKOUT_ACTION
-  abort "#{promote_path}:promote-to-production must use #{EXPECTED_CPFLOW_CHECKOUT_ACTION} for the Checkout control-plane-flow actions step"
-end
-
-checkout_with = checkout_step.fetch("with", {})
-checkout_repository = checkout_with["repository"]
-checkout_ref = checkout_with["ref"]
-
-unless checkout_repository == EXPECTED_CPFLOW_CHECKOUT_REPOSITORY
-  abort "#{promote_path}:promote-to-production must check out #{EXPECTED_CPFLOW_CHECKOUT_REPOSITORY}"
-end
-
-if checkout_ref.to_s.strip.empty?
-  abort "#{promote_path}:promote-to-production must pin the Checkout control-plane-flow actions step"
-end
-
-refs[checkout_ref] << "#{promote_path}:promote-to-production"
-
-setup_step = Array(promote_job["steps"]).find { |step| step["name"] == "Setup production environment" }
-
-unless setup_step
-  abort "#{promote_path}:promote-to-production must include a Setup production environment step"
-end
-
-setup_ref = setup_step.fetch("with", {})["control_plane_flow_ref"]
-setup_match = setup_ref.to_s.match(PROMOTE_WORKFLOW)
-
-unless setup_match
-  abort "#{promote_path}:promote-to-production must pass a pinned production control_plane_flow_ref to setup, " \
-        "for example #{EXPECTED_PROMOTE_WORKFLOW_REF_FORMAT}"
-end
-
-refs[setup_match[1]] << "#{promote_path}:promote-to-production setup"
 
 if refs.empty?
   puts "no upstream cpflow reusable workflow refs found"
@@ -150,7 +237,21 @@ end
 RUBY
 
 echo "==> actionlint"
-actionlint \
-  -ignore "SC2129" \
-  -ignore 'property "workflow_(ref|sha|repository|file_path)" is not defined in object type' \
-  .github/workflows/cpflow-*.yml
+shopt -s nullglob
+cpflow_workflows=(.github/workflows/cpflow-*.yml)
+if [[ ${#cpflow_workflows[@]} -gt 0 ]]; then
+  actionlint \
+    -ignore "SC2129" \
+    -ignore 'property "workflow_(ref|sha|repository|file_path)" is not defined in object type' \
+    "${cpflow_workflows[@]}"
+fi
+
+custom_validator="bin/test-cpflow-github-flow-custom"
+if [[ -e "$custom_validator" || -L "$custom_validator" ]]; then
+  if [[ ! -f "$custom_validator" || ! -x "$custom_validator" ]]; then
+    echo "Custom validator must be an executable file: $custom_validator" >&2
+    exit 1
+  fi
+  echo "==> downstream cpflow GitHub flow checks"
+  "$ROOT/$custom_validator" "${cpflow_cmd[@]}"
+fi
