@@ -45,6 +45,9 @@ its identity and app-specific key policy, and populate its own random
 `generated_review_secret_keys: [SECRET_KEY_BASE]` in that temporary copy to
 generate an isolated disposable key. Use `CONFIG_FILE_PATH` to select the copy;
 keep it outside the checkout and do not store credential values in it.
+Finish bootstrap by building and deploying the first application image. The
+reusable review workflow refreshes existing templates before its build, and
+requires a valid existing application image to preserve.
 
 The dedicated CI account is scoped to the staging app and explicitly approved
 review apps. Before creating another review app, a maintainer must add that
