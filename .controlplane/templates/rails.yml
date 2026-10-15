@@ -1,7 +1,7 @@
 kind: workload
 name: rails
 spec:
-  type: standard
+  type: stateful
   containers:
     - name: rails
       cpu: 300m
