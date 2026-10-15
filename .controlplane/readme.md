@@ -16,7 +16,14 @@ The Control Plane setup mirrors that:
 - `.controlplane/templates/db.yml` creates a persistent volume for `/app/db`
 - `.controlplane/templates/storage.yml` creates a persistent volume for `/app/storage`
 - `.controlplane/templates/rails.yml` mounts both volumes into the `rails` workload
-- `.controlplane/release_script.sh` runs `bin/rails db:prepare` before deploys switch images
+- `.controlplane/entrypoint.sh` prepares SQLite inside the stateful Rails workload
+
+Staging and review apps disable the separate release script. CPFlow's cron
+runner cannot mount these ext4 volumes, and the entrypoint already runs
+`rails db:prepare` before the server starts. These single-replica apps prepare
+their database during startup instead of in a separate pre-switch phase.
+Production retains its existing release configuration and requires separate
+verification before promotion.
 
 The generated `.controlplane/Dockerfile` installs Node.js alongside Ruby,
 auto-installs JavaScript dependencies for npm/Yarn/pnpm projects, and leaves a
@@ -31,11 +38,30 @@ Before the app will boot on Control Plane, populate `SECRET_KEY_BASE` in the
 generated secret dictionaries:
 
 - `react-on-rails-demo-ssr-hmr-staging-secrets`
-- `react-on-rails-demo-ssr-hmr-review-secrets`
+- `<review-app-name>-secrets` (one isolated dictionary per review app)
 - `react-on-rails-demo-ssr-hmr-production-secrets`
 
 `cpflow setup-app` creates those dictionaries automatically. You only need to
 add a `SECRET_KEY_BASE` entry to each one before the first deploy.
+
+Staging and review configuration sets `skip_secrets_setup: true` so CI cannot
+administer IAM policies. A maintainer must first bootstrap each app with a
+temporary copy of the configuration that sets this option to `false`, create
+its identity and app-specific key policy, and populate its own random
+`SECRET_KEY_BASE`. The review entry declares `generated_review_secret_keys`
+to select per-app secret names and generate an isolated disposable key during
+maintainer bootstrap. Keep that declaration when CI skips secret setup so
+template refresh preserves the per-app reference. Use `CONFIG_FILE_PATH` to select the copy;
+keep it outside the checkout and do not store credential values in it.
+Finish bootstrap by building and deploying the first application image. The
+reusable review workflow refreshes existing templates before its build, and
+requires a valid existing application image to preserve.
+
+The dedicated CI account is scoped to the staging app and explicitly approved
+review apps. Before creating another review app, a maintainer must add that
+app's GVC, workloads, volumes, identity, secret and image repository to the
+account's resource filters. CI may deploy and refresh those apps; it cannot
+grant itself broader access. Remove the review targets after cleanup.
 
 Review apps run pull request code. Values mounted through `cpln://secret/...`
 can be read by that code after the workload starts, so keep the review secret
@@ -51,7 +77,7 @@ export APP_NAME=react-on-rails-demo-ssr-hmr-staging
 
 cpflow setup-app -a "$APP_NAME"
 cpflow build-image -a "$APP_NAME"
-cpflow deploy-image -a "$APP_NAME" --run-release-phase
+cpflow deploy-image -a "$APP_NAME"
 cpflow open -a "$APP_NAME"
 ```
 
