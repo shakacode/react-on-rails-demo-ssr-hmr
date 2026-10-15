@@ -38,7 +38,7 @@ Before the app will boot on Control Plane, populate `SECRET_KEY_BASE` in the
 generated secret dictionaries:
 
 - `react-on-rails-demo-ssr-hmr-staging-secrets`
-- `react-on-rails-demo-ssr-hmr-review-secrets`
+- `<review-app-name>-secrets` (one isolated dictionary per review app)
 - `react-on-rails-demo-ssr-hmr-production-secrets`
 
 `cpflow setup-app` creates those dictionaries automatically. You only need to
