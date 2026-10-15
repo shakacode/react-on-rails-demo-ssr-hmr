@@ -48,9 +48,10 @@ Staging and review configuration sets `skip_secrets_setup: true` so CI cannot
 administer IAM policies. A maintainer must first bootstrap each app with a
 temporary copy of the configuration that sets this option to `false`, create
 its identity and app-specific key policy, and populate its own random
-`SECRET_KEY_BASE`. For a dynamically named review app, also set
-`generated_review_secret_keys: [SECRET_KEY_BASE]` in that temporary copy to
-generate an isolated disposable key. Use `CONFIG_FILE_PATH` to select the copy;
+`SECRET_KEY_BASE`. The review entry declares `generated_review_secret_keys`
+to select per-app secret names and generate an isolated disposable key during
+maintainer bootstrap. Keep that declaration when CI skips secret setup so
+template refresh preserves the per-app reference. Use `CONFIG_FILE_PATH` to select the copy;
 keep it outside the checkout and do not store credential values in it.
 Finish bootstrap by building and deploying the first application image. The
 reusable review workflow refreshes existing templates before its build, and

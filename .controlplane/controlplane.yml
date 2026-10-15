@@ -44,6 +44,7 @@ apps:
     <<: *common
     match_if_app_name_starts_with: true
     skip_secrets_setup: true
+    generated_review_secret_keys: [SECRET_KEY_BASE]
     release_script: null
 
   react-on-rails-demo-ssr-hmr-production:
