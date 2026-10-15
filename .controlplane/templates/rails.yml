@@ -1,7 +1,8 @@
 kind: workload
 name: rails
 spec:
-  type: standard
+  type: stateful
+  identityLink: "{{APP_IDENTITY_LINK}}"
   containers:
     - name: rails
       cpu: 300m
