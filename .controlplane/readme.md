@@ -77,7 +77,7 @@ export APP_NAME=react-on-rails-demo-ssr-hmr-staging
 
 cpflow setup-app -a "$APP_NAME"
 cpflow build-image -a "$APP_NAME"
-cpflow deploy-image -a "$APP_NAME" --run-release-phase
+cpflow deploy-image -a "$APP_NAME"
 cpflow open -a "$APP_NAME"
 ```
 
