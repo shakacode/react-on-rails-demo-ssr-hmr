@@ -2,6 +2,7 @@ kind: workload
 name: rails
 spec:
   type: stateful
+  identityLink: "{{APP_IDENTITY_LINK}}"
   containers:
     - name: rails
       cpu: 300m
