@@ -16,7 +16,14 @@ The Control Plane setup mirrors that:
 - `.controlplane/templates/db.yml` creates a persistent volume for `/app/db`
 - `.controlplane/templates/storage.yml` creates a persistent volume for `/app/storage`
 - `.controlplane/templates/rails.yml` mounts both volumes into the `rails` workload
-- `.controlplane/release_script.sh` runs `bin/rails db:prepare` before deploys switch images
+- `.controlplane/entrypoint.sh` prepares SQLite inside the stateful Rails workload
+
+Staging and review apps disable the separate release script. CPFlow's cron
+runner cannot mount these ext4 volumes, and the entrypoint already runs
+`rails db:prepare` before the server starts. These single-replica apps prepare
+their database during startup instead of in a separate pre-switch phase.
+Production retains its existing release configuration and requires separate
+verification before promotion.
 
 The generated `.controlplane/Dockerfile` installs Node.js alongside Ruby,
 auto-installs JavaScript dependencies for npm/Yarn/pnpm projects, and leaves a

@@ -38,11 +38,13 @@ apps:
     <<: *common
     # A maintainer bootstraps the identity/key; CI has no IAM policy-write access.
     skip_secrets_setup: true
+    release_script: null
 
   react-on-rails-demo-ssr-hmr-review:
     <<: *common
     match_if_app_name_starts_with: true
     skip_secrets_setup: true
+    release_script: null
 
   react-on-rails-demo-ssr-hmr-production:
     <<: *production
