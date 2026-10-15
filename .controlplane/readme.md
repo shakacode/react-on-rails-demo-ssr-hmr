@@ -37,6 +37,21 @@ generated secret dictionaries:
 `cpflow setup-app` creates those dictionaries automatically. You only need to
 add a `SECRET_KEY_BASE` entry to each one before the first deploy.
 
+Staging and review configuration sets `skip_secrets_setup: true` so CI cannot
+administer IAM policies. A maintainer must first bootstrap each app with a
+temporary copy of the configuration that sets this option to `false`, create
+its identity and app-specific key policy, and populate its own random
+`SECRET_KEY_BASE`. For a dynamically named review app, also set
+`generated_review_secret_keys: [SECRET_KEY_BASE]` in that temporary copy to
+generate an isolated disposable key. Use `CONFIG_FILE_PATH` to select the copy;
+keep it outside the checkout and do not store credential values in it.
+
+The dedicated CI account is scoped to the staging app and explicitly approved
+review apps. Before creating another review app, a maintainer must add that
+app's GVC, workloads, volumes, identity, secret and image repository to the
+account's resource filters. CI may deploy and refresh those apps; it cannot
+grant itself broader access. Remove the review targets after cleanup.
+
 Review apps run pull request code. Values mounted through `cpln://secret/...`
 can be read by that code after the workload starts, so keep the review secret
 dictionary limited to generated, review-only values. Do not reuse production or

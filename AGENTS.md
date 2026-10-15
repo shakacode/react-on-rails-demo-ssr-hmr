@@ -28,4 +28,9 @@ The local validation wrapper runs RSpec; it does not replace hosted PR checks.
 For a failure that appears only in CI, reproduce it with the matching job in
 `.github/workflows/`.
 
+Before merging application or deployment changes, deploy the exact PR revision
+to a review app and run light smoke tests: server-rendered content, hydration,
+input interactions, assets, reload, browser errors, and a missing route. Publish
+public-safe evidence and delete owned temporary resources after verification.
+
 Prefix follow-up titles with `Follow-up:`.
