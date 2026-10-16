@@ -13,4 +13,5 @@ jobs:
         run: |
           bundle install
           yarn install
+          yarn exec tsc --noEmit
           bundle exec rspec

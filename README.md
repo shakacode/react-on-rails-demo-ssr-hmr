@@ -2,7 +2,11 @@
 
 Each commit demonstrates a step in the [React on Rails Tutorial](https://github.com/shakacode/react_on_rails/blob/master/docs/guides/tutorial.md).
 
-**UPDATE July 2, 2024: This repo is updated to the latest [shakapacker gem and package](https://github.com/shakacode/shakapacker) v8.0.0 and [React on Rails](https://github.com/shakacode/react_on_rails) v14.0.3 releases!**
+This maintained demo uses React on Rails 17.2.0 and matching Shakapacker 10.3.2 Ruby and JavaScript packages. See the lockfiles for the complete dependency versions.
+
+It provides a focused compatibility example for standard Rails SSR, TypeScript/MDX, and Fast Refresh. Keep this app small so those integration paths remain easy to understand and verify; larger application and React Server Components scenarios belong in the other React on Rails demos.
+
+Dependency updates are checked with system tests, a local Fast Refresh pass, and an exact-revision hosted review app smoke test before merge. Hosted builds verify SSR and hydration; Fast Refresh is verified in development.
 
 ---
 
@@ -12,7 +16,7 @@ See the [commit history](https://github.com/shakacode/react_on_rails_tutorial_wi
 
 ## Key features
 
-1. `shakpacker` v8! (see explanation of the switch at [rails/webpacker](https://github.com/rails/webpacker)).
+1. Shakapacker with matching gem and npm versions (see explanation of the switch at [rails/webpacker](https://github.com/rails/webpacker)).
 1. Server-Side Rendering (SSR) of React using a separate server bundle.
 1. Webpack configuration for the server bundle is based on the rails/webpacker configuration for the client files.
 1. HMR is provided by [react-refresh-webpack-plugin](https://github.com/pmmmwh/react-refresh-webpack-plugin).
@@ -24,7 +28,7 @@ See the [commit history](https://github.com/shakacode/react_on_rails_tutorial_wi
 ## Setup
 
 ```bash
-git clone git@github.com:shakacode/react_on_rails_demo_ssr_hmr.git
+git clone git@github.com:shakacode/react-on-rails-demo-ssr-hmr.git
 corepack yarn install
 bin/setup
 ```
