@@ -7436,7 +7436,7 @@ __metadata:
     react-dom: ^19.2.7
     react-on-rails: 17.2.0
     react-refresh: ^0.18.0
-    shakapacker: 10.2.0
+    shakapacker: 10.3.2
     style-loader: ^4.0.0
     terser-webpack-plugin: ^5.6.1
     typescript: ^6.0.3
@@ -7639,9 +7639,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"shakapacker@npm:10.2.0":
-  version: 10.2.0
-  resolution: "shakapacker@npm:10.2.0"
+"shakapacker@npm:10.3.2":
+  version: 10.3.2
+  resolution: "shakapacker@npm:10.3.2"
   dependencies:
     js-yaml: ^4.1.0
     pack-config-diff: ^0.1.0
@@ -7674,7 +7674,7 @@ __metadata:
     webpack: ^5.101.0
     webpack-assets-manifest: ^5.0.6 || ^6.0.0
     webpack-cli: ^4.9.2 || ^5.0.0 || ^6.0.0 || ^7.0.0
-    webpack-dev-server: ^5.2.2
+    webpack-dev-server: ^5.2.2 || ^6.0.0
     webpack-subresource-integrity: ^5.1.0
   peerDependenciesMeta:
     "@babel/core":
@@ -7734,7 +7734,7 @@ __metadata:
   bin:
     diff-bundler-config: package/bin/diff-bundler-config.cjs
     shakapacker-config: package/bin/shakapacker-config.cjs
-  checksum: a07462dd5766488abe0de480b55358e1421291696e9624637e78db5081ab371b1e5dadd39eeedca9725131fe3e786856351927f3f8e658b9551d49a694eb316c
+  checksum: e93658df456487b96ada411ba48d2a54fdabce65099d2b1d8e0c2b6cc24360ee9d2a04229a3368bf8306f4262b82efafa8b74bc3b61f6c98194f7474c3319568
   languageName: node
   linkType: hard
 
