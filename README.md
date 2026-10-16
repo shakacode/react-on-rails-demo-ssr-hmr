@@ -6,7 +6,7 @@ This maintained demo uses React on Rails 17.2.0 and matching Shakapacker 10.3.2 
 
 It provides a focused compatibility example for standard Rails SSR, TypeScript/MDX, and Fast Refresh. Keep this app small so those integration paths remain easy to understand and verify; larger application and React Server Components scenarios belong in the other React on Rails demos.
 
-Dependency updates are checked with system tests, a local Fast Refresh pass, and an exact-revision hosted review app smoke test before merge. Hosted builds verify SSR and hydration; Fast Refresh is verified in development.
+Dependency updates are checked with system tests, a local Fast Refresh pass, and an exact-revision hosted review app smoke test before merge. Hosted builds verify SSR and hydration; Fast Refresh is verified in development. TypeScript remains on version 6 because the current development checker uses compiler APIs removed in version 7; upgrade the compiler and checker together.
 
 ---
 
