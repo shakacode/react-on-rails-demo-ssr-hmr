@@ -5,6 +5,12 @@ base_branch: master
 review:
   # No CI review report is required; AGENTS.md still requires the full check, thread, and mergeability gate.
   required: none
+  local_review_count: 2
+  local_review_agents:
+  - provider: anthropic
+    model_family: claude
+  - provider: openai
+    model_family: codex
 merge:
   preference: ask
 repo_prefix: RORSH
