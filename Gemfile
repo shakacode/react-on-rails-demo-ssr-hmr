@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby '3.4.6'
+ruby '3.4.9'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 8.1'
@@ -52,6 +52,6 @@ end
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 gem "shakapacker", "10.3.2"
-gem "react_on_rails", "17.2.0"
+gem "react_on_rails", "17.2.1.rc.0"
 
 gem "net-smtp", "~> 0.5.2"
