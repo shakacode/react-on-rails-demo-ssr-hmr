@@ -315,7 +315,7 @@ DEPENDENCIES
   web-console (>= 3.3.0)
 
 RUBY VERSION
-  ruby 3.4.6
+  ruby 3.4.9
 
 BUNDLED WITH
   4.0.10
