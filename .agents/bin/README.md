@@ -1,7 +1,7 @@
 # Agent Workflow Scripts
 
 Standard entry points that portable agent-workflow skills call, so a skill can
-run `.agents/bin/<name>` in any repo without knowing this repo's specific
+run `.agents/shaka/bin/<name>` in any repo without knowing this repo's specific
 commands. Each script is a thin, repo-owned wrapper. A script that is **absent**
 means that capability is n/a here.
 
@@ -15,4 +15,4 @@ means that capability is n/a here.
 | `docs` | Docs checks | n/a |
 | `ci-detect` | CI change detector | n/a |
 
-Non-command policy lives in [`../agent-workflow.yml`](../agent-workflow.yml).
+Non-command policy lives in [`../shaka/config.yml`](../shaka/config.yml).
