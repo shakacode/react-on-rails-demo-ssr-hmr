@@ -52,6 +52,6 @@ end
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 gem "shakapacker", "10.3.2"
-gem "react_on_rails", "17.2.1.rc.0"
+gem "react_on_rails", "17.2.1.rc.1"
 
 gem "net-smtp", "~> 0.5.2"
