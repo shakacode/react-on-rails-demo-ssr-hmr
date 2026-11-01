@@ -6,7 +6,7 @@ ruby '3.4.9'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 8.1'
 # Use sqlite3 as the database for Active Record
-gem 'sqlite3', '~> 2.9'
+gem 'sqlite3', '~> 2.10'
 # Use Puma as the app server
 gem 'puma', '~> 8.0'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
@@ -52,6 +52,6 @@ end
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 gem "shakapacker", "10.3.2"
-gem "react_on_rails", "17.2.1.rc.0"
+gem "react_on_rails", "17.2.1.rc.1"
 
 gem "net-smtp", "~> 0.5.2"
